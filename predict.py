@@ -9,11 +9,23 @@ from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_
 from PIL import Image
 from io import BytesIO
 
+from dotenv import load_dotenv
+
+# โหลดค่า .env
+load_dotenv()
+
 app = Flask(__name__)
 
 # ใส่ Channel Access Token และ Secret ที่ได้รับจาก LINE Developer Console
-line_bot_api = LineBotApi('V6ACIs+J8ktXTVf8f9XS5v/fZx2HzA4rx/QYNFkD2DSP5kYqkUxQGq606eOs6+uZCTtgYpwZRCKPolCfgY7mZktu/U+7lvRl5s1D5UPB52A8IMyj+fmgm7WVIqpOx8ySdM1p2s507+v9bMXAt9GakQdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('bdf99486c49ee382130aa9ab3bb557ab')
+line_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN')
+line_channel_secret = os.getenv('LINE_CHANNEL_SECRET')
+
+# ตรวจสอบว่าค่า Token และ Secret ถูกโหลดถูกต้อง
+print(line_access_token, line_channel_secret)
+
+# สร้าง WebhookHandler และ LineBotApi
+line_bot_api = LineBotApi(line_access_token)
+handler = WebhookHandler(line_channel_secret)
 
 # โหลดโมเดล MobileNetV2
 model = MobileNetV2(weights='imagenet')
